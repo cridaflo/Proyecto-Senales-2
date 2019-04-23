@@ -1,0 +1,9 @@
+function [Y] = gauss_m_cuad(X, mius, covs, alphas, cuad)
+ %la funcion cuadratica es de la forma x'*A*x+x'*B+C
+ A = cuad{1};
+ B = cuad{2};
+ C = cuad{3};
+ Q2 = X'*A*X+X'*B+C;
+ Y = gauss_m(X,mius, covs, alphas)+Q2;
+end
+
