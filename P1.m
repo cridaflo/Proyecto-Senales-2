@@ -6,22 +6,34 @@ cuad = {[1,0;0,1], [-10;-10], 50};
 
 syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
-
 g=-gradient(f, [x,y])
 
-x0=[-5;-5];
-x1=[-5;10];
+a=1;
+b=2;
+c=1;
+d=sqrt(10*log(b/a))
+arf=@(x,y) 100*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c))
+h=-gradient(arf,[x,y])
+
+x0=[-5;10];
+x1=[-5;0];
 equis=x0;
 equis1=x1;
 xs=[equis];
 xs1=[equis];
-i=0
+i=0;
 z=[f(equis(1),equis(2))];
 z1=[f(equis1(1),equis1(2))];
-while norm(equis-[5;5])>0.02 || norm(equis1-[5;5])>0.02
+
+numAgentes=2;
+while i<1000
     g1=double(subs(g(1), [x y], {equis(1),equis(2)}));
     g2=double(subs(g(2), [x y], {equis(1),equis(2)}));
-    equis=equis+0.02*[double(g1);double(g2)]/norm([double(g1);double(g2)]);
+    
+    g1=g1+double(subs(h(1), [x y], {equis(1)-equis1(1),equis(2)-equis1(2)}));
+    g2=g2+double(subs(h(2), [x y], {equis(1)-equis1(1),equis(2)-equis1(2)}));
+    
+    equis=equis+0.002*[double(g1);double(g2)];
     xs=[xs equis];
     z=[z f(equis(1),equis(2))];
     i=i+1;
@@ -29,7 +41,10 @@ while norm(equis-[5;5])>0.02 || norm(equis1-[5;5])>0.02
     
     g11=double(subs(g(1), [x y], {equis1(1),equis1(2)}));
     g21=double(subs(g(2), [x y], {equis1(1),equis1(2)}));
-    equis1=equis1+0.02*[double(g11);double(g21)]/norm([double(g11);double(g21)]);
+    g11=g11+double(subs(h(1), [x y], {equis1(1)-equis(1),equis1(2)-equis(2)}));
+    g21=g21+double(subs(h(2), [x y], {equis1(1)-equis(1),equis1(2)-equis(2)}));
+
+    equis1=equis1+0.002*[double(g11);double(g21)];
     xs1=[xs1 equis1];
     z1=[z1 f(equis1(1),equis1(2))];
 end
