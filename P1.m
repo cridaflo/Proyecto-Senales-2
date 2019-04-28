@@ -1,7 +1,9 @@
 close all;
-covs = {[0.9,0;0,0.9],[0.9,0;0,0.9],[1,0;0,100],[100,0;0,1]};
-mius = {[-1;0],[-1;10],[10;5],[0;15]};
-alphas = [20000,20000,1000000,1000000];
+clc;
+clear;
+
+[mius, covs, alphas] = cargar_escena();
+
 cuad = {[1,0;0,1], [-10;-10], 50};
 paso = 0.02;
 
@@ -9,11 +11,11 @@ syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
 g=-gradient(f, [x,y]);
 
-    a=1;
-    b=2;
+a=1;
+b=2;
 c=1;
-d=sqrt(10*log(b/a))
-arf=@(x,y) 100*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c))
+d=sqrt(10*log(b/a));
+arf=@(x,y) 100*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c));
 h=-gradient(arf,[x,y]);
 
 poss = cargar_pos();
@@ -54,10 +56,21 @@ mensaje = 'se fini'
 %% Graficas
 figure;
 hold on
-fsurf(f, [-10 20]);
+fsurf(f, [-20 20]);
 
 for j = 1:numAgentes
     xss = xs{j};
     scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled', 'm')
 end
 
+%% Grafica Escena
+figure;
+
+[mius, covs, alphas] = cargar_escena();
+cuad = {[1,0;0,1], [-10;-10], 50};
+paso = 0.02;
+
+syms x y;
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
+
+fsurf(f,[-22 22]);
