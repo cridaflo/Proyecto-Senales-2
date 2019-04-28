@@ -3,6 +3,7 @@ covs = {[0.9,0;0,0.9],[0.9,0;0,0.9],[1,0;0,100],[100,0;0,1]};
 mius = {[-1;0],[-1;10],[10;5],[0;15]};
 alphas = [20000,20000,1000000,1000000];
 cuad = {[1,0;0,1], [-10;-10], 50};
+paso = 0.002;
 
 syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
@@ -13,46 +14,50 @@ b=2;
 c=1;
 d=sqrt(10*log(b/a))
 arf=@(x,y) 100*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c))
-h=-gradient(arf,[x,y])
+h=-gradient(arf,[x,y]);
 
-x0=[-5;10];
-x1=[-5;0];
-equis=x0;
-equis1=x1;
-xs=[equis];
-xs1=[equis];
-i=0;
-z=[f(equis(1),equis(2))];
-z1=[f(equis1(1),equis1(2))];
-
-numAgentes=2;
-while i<1000
-    g1=double(subs(g(1), [x y], {equis(1),equis(2)}));
-    g2=double(subs(g(2), [x y], {equis(1),equis(2)}));
-    
-    g1=g1+double(subs(h(1), [x y], {equis(1)-equis1(1),equis(2)-equis1(2)}));
-    g2=g2+double(subs(h(2), [x y], {equis(1)-equis1(1),equis(2)-equis1(2)}));
-    
-    equis=equis+0.002*[double(g1);double(g2)];
-    xs=[xs equis];
-    z=[z f(equis(1),equis(2))];
-    i=i+1;
-    
-    
-    g11=double(subs(g(1), [x y], {equis1(1),equis1(2)}));
-    g21=double(subs(g(2), [x y], {equis1(1),equis1(2)}));
-    g11=g11+double(subs(h(1), [x y], {equis1(1)-equis(1),equis1(2)-equis(2)}));
-    g21=g21+double(subs(h(2), [x y], {equis1(1)-equis(1),equis1(2)-equis(2)}));
-
-    equis1=equis1+0.002*[double(g11);double(g21)];
-    xs1=[xs1 equis1];
-    z1=[z1 f(equis1(1),equis1(2))];
+poss = cargar_pos();
+equis = poss;
+xs = {};
+zs = {};
+[m,numAgentes] = size(poss);
+for i = 1:numAgentes
+    p = poss{i};
+    xs{i} = p;
+    zs{i} = [f(p(1),p(2))];
 end
 
+i=0;
+while i<1000
+    for j = 1:numAgentes
+        pj = poss{j};
+        G = double(subs(g, [x y], {p(1),p(2)}));
+        g1 = G(1);
+        g2 = G(2);
+        for k=1:numAgentes
+            if k~=j
+                pk = poss{k};
+                H = double(subs(h, [x y], {pj(1)-pk(1),pj(2)-pk(2)}));
+                g1 = g1+H(1);
+                g2 = g2+H(2);
+            end
+        end
+        pj = pj+paso*[g1;g2];
+        poss{j} = pj;
+        xs{j} = [xs{j},pj];
+        zs{j} = [zs{j}, f(pj(1), pj(2))];
+        i=i+1;        
+    end
+    
+end
+mensaje = 'se fini'
 %% Graficas
 figure;
 hold on
 fsurf(f, [-10 20]);
-scatter3(transpose(xs(1,:)),transpose(xs(2,:)), z, 'filled', 'm')
+for j = 1:numAgentes
+    xss = xs{j};
+    scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled', 'm')
+end
 
-scatter3(transpose(xs1(1,:)),transpose(xs1(2,:)), z1, 'filled', 'm')
+%scatter3(transpose(xs1(1,:)),transpose(xs1(2,:)), z1, 'filled', 'm')
