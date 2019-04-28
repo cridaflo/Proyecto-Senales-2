@@ -3,11 +3,11 @@ covs = {[0.9,0;0,0.9],[0.9,0;0,0.9],[1,0;0,100],[100,0;0,1]};
 mius = {[-1;0],[-1;10],[10;5],[0;15]};
 alphas = [20000,20000,1000000,1000000];
 cuad = {[1,0;0,1], [-10;-10], 50};
-paso = 0.002;
+paso = 0.02;
 
 syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
-g=-gradient(f, [x,y])
+g=-gradient(f, [x,y]);
 
 a=1;
 b=2;
@@ -31,7 +31,7 @@ i=0;
 while i<1000
     for j = 1:numAgentes
         pj = poss{j};
-        G = double(subs(g, [x y], {p(1),p(2)}));
+        G = double(subs(g, [x y], {pj(1),pj(2)}));
         g1 = G(1);
         g2 = G(2);
         for k=1:numAgentes
@@ -42,12 +42,12 @@ while i<1000
                 g2 = g2+H(2);
             end
         end
-        pj = pj+paso*[g1;g2];
+        pj = pj+paso*[g1;g2]/norm([g1;g2]);
         poss{j} = pj;
         xs{j} = [xs{j},pj];
-        zs{j} = [zs{j}, f(pj(1), pj(2))];
-        i=i+1;        
+        zs{j} = [zs{j}, f(pj(1), pj(2))];       
     end
+    i=i+1;
     
 end
 mensaje = 'se fini'
@@ -55,9 +55,9 @@ mensaje = 'se fini'
 figure;
 hold on
 fsurf(f, [-10 20]);
+
 for j = 1:numAgentes
     xss = xs{j};
     scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled', 'm')
 end
 
-%scatter3(transpose(xs1(1,:)),transpose(xs1(2,:)), z1, 'filled', 'm')
