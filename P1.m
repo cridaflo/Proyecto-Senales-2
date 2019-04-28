@@ -9,8 +9,8 @@ syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
 g=-gradient(f, [x,y]);
 
-a=1;
-b=2;
+    a=1;
+    b=2;
 c=1;
 d=sqrt(10*log(b/a))
 arf=@(x,y) 100*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c))
