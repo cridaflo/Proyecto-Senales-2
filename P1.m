@@ -2,9 +2,10 @@ close all;
 clc;
 clear;
 
+tic
 [mius, covs, alphas] = cargar_escena();
 
-cuad = {[1,0;0,1], [-10;-10], 50};
+cuad = {[1,0;0,1], [-36;-36], 50};
 paso = 0.02;
 
 syms x y;
@@ -15,7 +16,8 @@ a=1;
 b=2;
 c=1;
 d=sqrt(10*log(b/a));
-arf=@(x,y) 100*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c));
+e = 20;
+arf=@(x,y) e*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c));
 h=-gradient(arf,[x,y]);
 
 poss = cargar_pos();
@@ -30,7 +32,7 @@ for i = 1:numAgentes
 end
 
 i=0;
-while i<1000
+while i<2000
     for j = 1:numAgentes
         pj = poss{j};
         G = double(subs(g, [x y], {pj(1),pj(2)}));
@@ -62,6 +64,8 @@ for j = 1:numAgentes
     xss = xs{j};
     scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled', 'm')
 end
+
+tiempo = toc
 
 %% Grafica Escena
 figure;

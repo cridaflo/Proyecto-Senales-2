@@ -2,6 +2,7 @@ close all;
 clc;
 clear;
 
+tic
 [mius, covs, alphas] = cargar_escena();
 
 cuad = {[1,0;0,1], [-10;-10], 50};
@@ -63,6 +64,8 @@ for j = 1:numAgentes
     scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled', 'm')
 end
 
+tiempo = toc
+
 %% Grafica Escena
 figure;
 
@@ -73,4 +76,4 @@ paso = 0.02;
 syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
 
-fsurf(f,[--22 40]);
+fsurf(f,[-22 22]);
