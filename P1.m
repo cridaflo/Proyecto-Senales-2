@@ -5,8 +5,8 @@ clear;
 tic
 [mius, covs, alphas] = cargar_escena();
 
-cuad = {[1,0;0,1], [-36;-36], 40};
-paso = 0.02;
+cuad = {[1,0;0,1], [-36;-36], 648};
+paso = 0.03;
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
 %Recordar que un agente se elimina al llegar al mínimo.
@@ -48,8 +48,13 @@ for i = 1:numAgentes
     zs{i} = [f(p(1),p(2))];
 end
 
+%Calcular el mínimo, el punto de salida al que deberían llegar.
 i=0;
-while i<4000 && numAgentes > minimoAgentes
+x0=15;
+y0=15;
+[min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] )
+
+while i<3000 && numAgentes > minimoAgentes
     %[m,numAgentes] = size(poss);
     ji=1;
     while ji<numAgentes+1
@@ -68,16 +73,17 @@ while i<4000 && numAgentes > minimoAgentes
                 g2 = g2+H(2);
             end
         end
+        dist = norm([(min1(1)-pj(1));(min1(2)-pj(2))]);
         norma = norm([g1;g2]);
         
-        if norma > umbralNorma
+        if dist > umbralNorma
             pj = pj+paso*[g1;g2]/norma;
             poss{j} = pj;
             xs{j} = [xs{j},pj];
             zs{j} = [zs{j}, f(pj(1), pj(2))];
             ji = ji+1;
         else
-            norma
+            dist
             j0(ji) = [];
             numAgentes = numAgentes-1
         end
