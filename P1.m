@@ -5,7 +5,7 @@ clear;
 tic
 [mius, covs, alphas] = cargar_escena();
 
-cuad = {[1,0;0,1], [-36;-36], 50};
+cuad = {[1,0;0,1], [-36;-36], 40};
 paso = 0.02;
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
@@ -17,7 +17,7 @@ minimoAgentes = 0;
 umbralNorma = 0.5;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,40);
 g=-gradient(f, [x,y]);
 
 a=1;
@@ -25,6 +25,7 @@ b=2;
 c=1;
 d=sqrt(10*log(b/a));
 e = 20;
+
 arf=@(x,y) e*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c));
 h=-gradient(arf,[x,y]);
 
