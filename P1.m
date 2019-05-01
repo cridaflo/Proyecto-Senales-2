@@ -6,7 +6,7 @@ tic
 [mius, covs, alphas] = cargar_escena();
 
 cuad = {[1,0;0,1], [-36;-36], 648};
-paso = 0.03;
+paso = 0.2;
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
 %Recordar que un agente se elimina al llegar al mínimo.
