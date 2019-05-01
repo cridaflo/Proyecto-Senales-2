@@ -111,7 +111,7 @@ for j = 1:numAgentesInicio
    zss = zss(end);
    zss = zss + 10000;
    
-   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[1 1 1]);
+   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[0 0 0]);
 end
 
 for j = 1:numAgentesInicio
@@ -121,7 +121,7 @@ for j = 1:numAgentesInicio
    zss = zss(end);
    zss = zss + 10000;
    
-   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[0 0 0]);
+   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[1 1 1]);
 end
 
 tiempo = toc
