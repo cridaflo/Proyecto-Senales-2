@@ -33,6 +33,7 @@ poss = cargar_pos();
 equis = poss;
 xs = {};
 zs = {};
+zi = {};
 [m,numAgentes] = size(poss);
 
 %Es el número de agentes con el que se inicia la simulación.
@@ -46,6 +47,7 @@ for i = 1:numAgentes
     p = poss{i};
     xs{i} = p;
     zs{i} = [f(p(1),p(2))];
+    zi{i} = [f(p(1),p(2))];
 end
 
 %Calcular el mínimo, el punto de salida al que deberían llegar.
@@ -99,7 +101,7 @@ fsurf(f, [-20 20]);
 
 for j = 1:numAgentesInicio
     xss = xs{j};
-    scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled', 'm')
+    scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled','MarkerFaceColor', [rand rand rand])
 end
 
 for j = 1:numAgentesInicio
@@ -109,7 +111,17 @@ for j = 1:numAgentesInicio
    zss = zss(end);
    zss = zss + 10000;
    
-   scatter3(xss(1),xss(2),zss,'*','r');
+   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[1 1 1]);
+end
+
+for j = 1:numAgentesInicio
+   xss = equis{j};
+   xss = [xss(1) xss(2)];
+   zss = zi{j};
+   zss = zss(end);
+   zss = zss + 10000;
+   
+   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[0 0 0]);
 end
 
 tiempo = toc
