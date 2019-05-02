@@ -20,13 +20,8 @@ syms x y;
 f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,40);
 g=-gradient(f, [x,y]);
 
-a=1;
-b=2;
-c=1;
-d=sqrt(10*log(b/a));
-e = 20;
 
-arf=@(x,y) e*(a/2*distance(x,y)^2+b*c/2*exp(-(distance(x,y))^2/c));
+arf=@(x,y) J_agg(x,y,1);
 h=-gradient(arf,[x,y]);
 
 poss = cargar_pos();
@@ -97,11 +92,12 @@ mensaje = 'se fini'
 %% Graficas
 figure;
 hold on
-fsurf(f, [-20 20]);
 
+fsurf(f, [-20 20]);
+colores = hot(numAgentesInicio);
 for j = 1:numAgentesInicio
     xss = xs{j};
-    scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled','MarkerFaceColor', [rand rand rand])
+    scatter3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j}, 'filled','MarkerFaceColor', colores(j,:))
 end
 
 for j = 1:numAgentesInicio
@@ -127,7 +123,7 @@ end
 tiempo = toc
 
 %% Grafica Escena
-% figure;
+% figure;   
 % 
 % [mius, covs, alphas] = cargar_escena();
 % cuad = {[1,0;0,1], [-10;-10], 50};
