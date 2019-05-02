@@ -7,6 +7,7 @@ tic
 
 cuad = {[1,0;0,1], [-36;-36], 648};
 paso = 0.2;
+frecuencia = 40;
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
 %Recordar que un agente se elimina al llegar al mínimo.
@@ -85,45 +86,14 @@ while i<3000 && numAgentes > minimoAgentes
             numAgentes = numAgentes-1
         end
     end
+    if mod(i,frecuencia) == 0
+        pintar(f,xs,zs, equis, zi,numAgentesInicio);
+    end
     i=i+1;
     
 end
 mensaje = 'se fini'
-%% Graficas
-figure;
-hold on
-
-s = fsurf(f, [-20 20]);
-s.EdgeColor = 'none';
-
-colores = hot(numAgentesInicio);
-for j = 1:numAgentesInicio
-    xss = xs{j};
-    p = plot3(transpose(xss(1,:)),transpose(xss(2,:)), zs{j});
-    p.Color = colores(j,:);
-    p.LineWidth = 1;
-end
-
-for j = 1:numAgentesInicio
-   xss = xs{j};
-   xss = [xss(end-1) xss(end)];
-   zss = zs{j};
-   zss = zss(end);
-   zss = zss + 10000;
-   
-   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[0 0 0]);
-end
-
-for j = 1:numAgentesInicio
-   xss = equis{j};
-   xss = [xss(1) xss(2)];
-   zss = zi{j};
-   zss = zss(end);
-   zss = zss + 10000;
-   
-   scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[1 1 1]);
-end
-
+pintar(f,xs,zs, equis, zi,numAgentesInicio);
 tiempo = toc
 
 %% Grafica Escena
