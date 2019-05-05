@@ -3,7 +3,7 @@ function [] = pintar(f,xs,zs, equis, zi,numAgentesInicio)
 figure;
 hold on
 
-s = fsurf(f, [-20 20]);
+s = fsurf(f, [-2 15 -2 8]);
 s.EdgeColor = 'none';
 
 colores = hot(numAgentesInicio);
@@ -21,7 +21,7 @@ for j = 1:numAgentesInicio
    xss = [xss(end-1) xss(end)];
    zss = zs{j};
    zss = zss(end);
-   zss = zss + 10000;
+   zss = zss;
    
    scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[0 0 0], 'MarkerEdgeColor',colores(j,:) );
    
@@ -32,7 +32,7 @@ for j = 1:numAgentesInicio
    xss = [xss(1) xss(2)];
    zss = zi{j};
    zss = zss(end);
-   zss = zss + 10000;
+   zss = zss;
    
    scatter3(xss(1),xss(2),zss,'o','MarkerFaceColor',[1 1 1],'MarkerEdgeColor',colores(j,:));
    

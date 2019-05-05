@@ -5,9 +5,9 @@ clear;
 tic
 [mius, covs, alphas] = cargar_escena();
 
-cuad = {[1,0;0,1], [-36;-36], 648};
-paso = 0.2;
-frecuencia = 40;
+%cuad = {[1,0;0,1], [-36;-36], 648};
+cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+paso = 0.05; %Es la factor que multiplica al gradiente de los agentes en cada iteracion.
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
 %Recordar que un agente se elimina al llegar al mínimo.
@@ -18,7 +18,7 @@ minimoAgentes = 0;
 umbralNorma = 0.5;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,40);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.025/8);
 g=-gradient(f, [x,y]);
 
 
@@ -34,6 +34,7 @@ zi = {};
 
 %Es el número de agentes con el que se inicia la simulación.
 numAgentesInicio = numAgentes;
+frecuencia = numAgentesInicio*8;
 
 %Es una variable utilizada para indicar los agentes restantes y su
 %posición.
@@ -52,7 +53,7 @@ x0=15;
 y0=15;
 [min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] )
 
-while i<3000 && numAgentes > minimoAgentes
+while i<1000 && numAgentes > minimoAgentes
     %[m,numAgentes] = size(poss);
     ji=1;
     while ji<numAgentes+1
@@ -88,6 +89,7 @@ while i<3000 && numAgentes > minimoAgentes
     end
     if mod(i,frecuencia) == 0
         pintar(f,xs,zs, equis, zi,numAgentesInicio);
+        i
     end
     i=i+1
     
@@ -95,15 +97,25 @@ end
 mensaje = 'se fini'
 %pintar(f,xs,zs, equis, zi,numAgentesInicio);
 tiempo = toc
+i-1
 
 %% Grafica Escena
-% figure;   
-% 
-% [mius, covs, alphas] = cargar_escena();
-% cuad = {[1,0;0,1], [-10;-10], 50};
-% paso = 0.02;
-% 
-% syms x y;
-% f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,20);
-% 
-% fsurf(f,[-22 22]);
+figure; hold on;  
+a0=1;
+[mius, covs, alphas] = cargar_escena();
+cuad = {[a0,0;0,2*a0], [-20*a0;-11.37*2*a0], 50};
+%cuad = {[0,0;0,0], [0;0], 0};
+
+paso = 0.02;
+
+syms x y;
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.025/32);
+
+fsurf(f,[-2 15 -2 8]);
+
+[min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] );
+
+zmin = f(min1(1),min1(2));
+
+scatter3(min1(1),min1(2),zmin,'filled','MarkerFaceColor','r');
+min1
