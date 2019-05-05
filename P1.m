@@ -89,11 +89,11 @@ while i<3000 && numAgentes > minimoAgentes
     if mod(i,frecuencia) == 0
         pintar(f,xs,zs, equis, zi,numAgentesInicio);
     end
-    i=i+1;
+    i=i+1
     
 end
 mensaje = 'se fini'
-pintar(f,xs,zs, equis, zi,numAgentesInicio);
+%pintar(f,xs,zs, equis, zi,numAgentesInicio);
 tiempo = toc
 
 %% Grafica Escena
