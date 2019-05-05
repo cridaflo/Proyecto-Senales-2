@@ -1,5 +1,5 @@
 function [posiciones] = cargar_pos()
-[num,txt,raw] = xlsread('posiciones.xlsx');
+[num,txt,raw] = xlsread('posiciones_W204.xlsx');
 [m,n] = size(num);
 posiciones = {};
 for i =1:m
