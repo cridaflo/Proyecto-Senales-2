@@ -3,7 +3,8 @@ clc;
 clear;
 
 tic
-[mius, covs, alphas] = cargar_escena();
+escena = 'W204';
+[mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
 
 %cuad = {[1,0;0,1], [-36;-36], 648};
 cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};

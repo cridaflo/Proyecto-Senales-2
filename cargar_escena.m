@@ -1,6 +1,6 @@
-function [medias, covs, alphas] = cargar_escena()
+function [medias, covs, alphas] = cargar_escena(escena)
 
-num = xlsread('escena_W204.xlsx');
+num = xlsread(escena);%('escena_W204.xlsx');
 
 [m,n] = size(num);
 medias = cell(1,m);
