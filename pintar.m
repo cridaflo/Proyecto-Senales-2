@@ -4,10 +4,10 @@ figure;
 hold on
 
 %Para W204
-s = ezsurf(f,[-2 13 -2 8]);
+%s = ezsurf(f,[-2 13 -2 8]);
 
 %Para PU300
-%s = ezsurf(f,[-1 6 -1 8]);
+s = ezsurf(f,[-1 6 -1 8]);
 
 %s = fsurf(f,[-1 6 -1 8]);
 %s.EdgeColor = 'none';

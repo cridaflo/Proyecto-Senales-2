@@ -108,27 +108,34 @@ pintar(f,xs,zs, equis, zi,numAgentesInicio);
 tiempo = toc
 i-1
 
+save(['./Resultados/jdm_simu_' num2str(numAgentesInicio) '_' escena]);
+
 %% Grafica Escena
 figure; hold on;  
 
-escena = 'W204';
+escena = 'PU300';
 [mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
-%cuad = {[1,0;0,1], [1;-1.35], 50};
 
-cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+cuad = {[1,0;0,1], [1;-1.35], 50};
+%cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
 
 paso = 0.02;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad, 0.5/4);
 
 %Con ezsurf es mas rapido.
-ezsurf(f,[-2 13 -2 8]);
+ezsurf(f,[-1 6 -1 8]);
+
+%ezsurf(f,[-2 13 -2 8]);
 %fsurf(f,[-1 6 -1 8]);
 
 [min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] );
 
 zmin = f(min1(1),min1(2));
 
-scatter3(min1(1),min1(2),zmin,'filled','MarkerFaceColor','r');
+scatter3(min1(1),min1(2),zmin+1,'filled','MarkerFaceColor','r');
 min1
+
+title(['Scenario for classroom ' escena]);
