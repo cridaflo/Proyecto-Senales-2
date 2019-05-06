@@ -1,9 +1,9 @@
 function [rta] = J_agg(x,y,vol)
 
-a=1;
+a=1.1;
 b=0.1;
-c=1;
-e = 0.01;
+c=1.5;
+e = 0.003;
 eta = 0.43;
 rta =a/2*distance(x,y)^2;
 if vol == 0

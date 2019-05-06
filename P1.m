@@ -18,7 +18,7 @@ minimoAgentes = 0;
 umbralNorma = 0.5;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.025/8);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
 g=-gradient(f, [x,y]);
 
 
