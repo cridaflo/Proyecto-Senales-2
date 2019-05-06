@@ -44,7 +44,7 @@ zi = {};
 
 %Es el número de agentes con el que se inicia la simulación.
 numAgentesInicio = numAgentes;
-frecuencia = numAgentesInicio*16;
+frecuencia = numAgentesInicio*8;
 
 %Es una variable utilizada para indicar los agentes restantes y su
 %posición.
@@ -101,11 +101,11 @@ while i<1000 && numAgentes > minimoAgentes
         pintar(f,xs,zs, equis, zi,numAgentesInicio);
         i
     end
-    i=i+1
+    i=i+1;
     
 end
 mensaje = 'se fini'
-%pintar(f,xs,zs, equis, zi,numAgentesInicio);
+pintar(f,xs,zs, equis, zi,numAgentesInicio);
 tiempo = toc
 i-1
 
