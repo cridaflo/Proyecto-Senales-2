@@ -3,14 +3,14 @@ clc;
 clear;
 
 tic
-escena = 'PU300';
+escena = 'W204';
 [mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
 
 %Para W204
-%cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
 
 %Para PU300
-cuad = {[1,0;0,1], [1;-1.35], 50};
+%cuad = {[1,0;0,1], [1;-1.35], 50};
 
 paso = 0.05; %Es la factor que multiplica al gradiente de los agentes en cada iteracion.
 
@@ -24,13 +24,12 @@ umbralNorma = 0.1;
 
 syms x y;
 %Para W204
-%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
 
 %Para PU300
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
+%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
 
 g=-gradient(f, [x,y]);
-
 
 arf=@(x,y) J_agg(x,y,1);
 h=-gradient(arf,[x,y]);
@@ -112,18 +111,19 @@ i-1
 %% Grafica Escena
 figure; hold on;  
 
-escena = 'PU300';
+escena = 'W204';
 [mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
-cuad = {[1,0;0,1], [1;-1.35], 50};
-%cuad = {[0,0;0,0], [0;0], 0};
+%cuad = {[1,0;0,1], [1;-1.35], 50};
+
+cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
 
 paso = 0.02;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
 
 %Con ezsurf es mas rapido.
-ezsurf(f,[-1 6 -1 8]);
+ezsurf(f,[-2 13 -2 8]);
 %fsurf(f,[-1 6 -1 8]);
 
 [min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] );
