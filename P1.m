@@ -3,11 +3,15 @@ clc;
 clear;
 
 tic
-escena = 'W204';
+escena = 'PU300';
 [mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
 
-%cuad = {[1,0;0,1], [-36;-36], 648};
-cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+%Para W204
+%cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+
+%Para PU300
+cuad = {[1,0;0,1], [1;-1.35], 50};
+
 paso = 0.05; %Es la factor que multiplica al gradiente de los agentes en cada iteracion.
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
@@ -16,17 +20,22 @@ minimoAgentes = 0;
 
 %Es un umbral utilizado para definir cuando se elimina un agente de la
 %simulacion.
-umbralNorma = 0.5;
+umbralNorma = 0.1;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+%Para W204
+%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+
+%Para PU300
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
+
 g=-gradient(f, [x,y]);
 
 
 arf=@(x,y) J_agg(x,y,1);
 h=-gradient(arf,[x,y]);
 
-poss = cargar_pos();
+poss = cargar_pos(['posiciones_' escena '.xlsx']);
 equis = poss;
 xs = {};
 zs = {};
@@ -35,7 +44,7 @@ zi = {};
 
 %Es el número de agentes con el que se inicia la simulación.
 numAgentesInicio = numAgentes;
-frecuencia = numAgentesInicio*8;
+frecuencia = numAgentesInicio*16;
 
 %Es una variable utilizada para indicar los agentes restantes y su
 %posición.
@@ -102,17 +111,20 @@ i-1
 
 %% Grafica Escena
 figure; hold on;  
-a0=1;
-[mius, covs, alphas] = cargar_escena();
-cuad = {[a0,0;0,2*a0], [-20*a0;-11.37*2*a0], 50};
+
+escena = 'PU300';
+[mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
+cuad = {[1,0;0,1], [1;-1.35], 50};
 %cuad = {[0,0;0,0], [0;0], 0};
 
 paso = 0.02;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.025/32);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
 
-fsurf(f,[-2 15 -2 8]);
+%Con ezsurf es mas rapido.
+ezsurf(f,[-1 6 -1 8]);
+%fsurf(f,[-1 6 -1 8]);
 
 [min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] );
 

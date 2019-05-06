@@ -3,8 +3,9 @@ function [] = pintar(f,xs,zs, equis, zi,numAgentesInicio)
 figure;
 hold on
 
-s = fsurf(f, [-2 15 -2 8]);
-s.EdgeColor = 'none';
+s = ezsurf(f,[-1 6 -1 8]);
+%s = fsurf(f,[-1 6 -1 8]);
+%s.EdgeColor = 'none';
 
 colores = hot(numAgentesInicio);
 

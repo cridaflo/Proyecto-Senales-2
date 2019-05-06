@@ -3,11 +3,15 @@ clc;
 clear;
 
 tic
-[mius, covs, alphas] = cargar_escena();
+escena = 'W204';
+[mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
 
-cuad = {[1,0;0,1], [-36;-36], 648};
-paso = 0.2;
-frecuencia = 40;
+%Para W204
+%cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+
+%Para PU300
+cuad = {[1,0;0,1], [0;-1.35], 50};
+paso = 0.05; %Es la factor que multiplica al gradiente de los agentes en cada iteracion.
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
 %Recordar que un agente se elimina al llegar al mínimo.
@@ -18,7 +22,12 @@ minimoAgentes = 0;
 umbralNorma = 0.5;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,40);
+%Para W204
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+
+%Para PU300
+
+
 g=-gradient(f, [x,y]);
 
 
@@ -34,6 +43,7 @@ zi = {};
 
 %Es el número de agentes con el que se inicia la simulación.
 numAgentesInicio = numAgentes;
+frecuencia = numAgentesInicio*8;
 
 %Es una variable utilizada para indicar los agentes restantes y su
 %posición.
@@ -52,7 +62,7 @@ x0=15;
 y0=15;
 [min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] )
 
-while i<3000 && numAgentes > minimoAgentes
+while i<1000 && numAgentes > minimoAgentes
     %[m,numAgentes] = size(poss);
     ji=1;
     while ji<numAgentes+1
@@ -88,24 +98,36 @@ while i<3000 && numAgentes > minimoAgentes
     end
     if mod(i,frecuencia) == 0
         pintar(f,xs,zs, equis, zi,numAgentesInicio);
+        i
     end
-    i=i+1;
+    i=i+1
     
 end
 mensaje = 'se fini'
-pintar(f,xs,zs, equis, zi,numAgentesInicio);
+%pintar(f,xs,zs, equis, zi,numAgentesInicio);
 tiempo = toc
+i-1
 
 %% Grafica Escena
-figure;   
+figure; hold on;  
 
-[mius, covs, alphas] = cargar_escena();
-cuad = {[1,0;0,1], [-22.9;-11.37], 50};
+escena = 'PU300';
+[mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
+cuad = {[1,0;0,1], [0;-1.35], 50};
 %cuad = {[0,0;0,0], [0;0], 0};
 
 paso = 0.02;
 
 syms x y;
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.025/16);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.125/4);
 
-fsurf(f,[-1 12]);
+%Con ezsurf es mas rapido.
+%ezsurf(f,[-1 6 -1 8]);
+fsurf(f,[-1 6 -1 8]);
+
+[min1]=fminsearch(@(z) f(z(1),z(2)) ,[x0,y0] );
+
+zmin = f(min1(1),min1(2));
+
+scatter3(min1(1),min1(2),zmin,'filled','MarkerFaceColor','r');
+min1
