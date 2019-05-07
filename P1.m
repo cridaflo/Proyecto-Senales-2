@@ -3,16 +3,16 @@ clc;
 clear;
 
 tic
-escena = 'W204';
+escena = 'PU300';
 [mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
 
 %Para W204
-cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
+%cuad = {[1,0;0,2], [-27.6;-11.37*2], 50};
 
 %Para PU300
-%cuad = {[1,0;0,1], [1;-1.35], 50};
+cuad = {[1,0;0,1], [1;-1.35], 50};
 
-paso = 0.05; %Es la factor que multiplica al gradiente de los agentes en cada iteracion.
+paso = 0.05; %Es el factor que multiplica al gradiente de los agentes en cada iteracion.
 
 %Es el minimo de agentes que deben permanecer para continuar la simulacion.
 %Recordar que un agente se elimina al llegar al mínimo.
@@ -24,10 +24,10 @@ umbralNorma = 0.1;
 
 syms x y;
 %Para W204
-f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
+%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
 
 %Para PU300
-%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
+f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
 
 g=-gradient(f, [x,y]);
 
@@ -43,7 +43,7 @@ zi = {};
 
 %Es el número de agentes con el que se inicia la simulación.
 numAgentesInicio = numAgentes;
-frecuencia = numAgentesInicio*8;
+frecuencia = numAgentesInicio;
 
 %Es una variable utilizada para indicar los agentes restantes y su
 %posición.
@@ -98,6 +98,7 @@ while i<1000 && numAgentes > minimoAgentes
     end
     if mod(i,frecuencia) == 0
         pintar(f,xs,zs, equis, zi,numAgentesInicio);
+        title(['Iteration ' num2str(i)]);
         i
     end
     i=i+1;
