@@ -1,3 +1,6 @@
+%Es un codigo auxiliar para visualizar las distancias entre los agentes y
+%el minimo.
+
 distances=[];
  for j=1:numAgentes
      pj = poss{j};

@@ -1,5 +1,8 @@
 function [rta] = J_agg(x,y,vol,escena)
 
+%Esta retorna la funcion de atraccion repulsion para la escena indicada por
+%parametro.
+
 a=0.5;
 b=0.1;
 c=1.5;
@@ -7,7 +10,6 @@ e = 0.05;
 eta = 0.43/2;
 
 if strcmp(escena,'W204')
-   disp('Entre');
    a = 1.1;
    e = 0.003;
 end

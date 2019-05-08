@@ -3,28 +3,28 @@ clc;
 clear;
 
 tic
-escena = 'W204';
-%Carga la escena dependiendo de un excel, Esta escena define las diferentes
-%gauseanas necesarias para formar el layout del salón (sus normas, covarianzas
-%y el factor al cual están escalados). Existen 2, el W204 y el PU300
+
+%Especificar en esta variable la escena que se desea cargar.
+%Existen 2 opciones: 'W204' o 'PU300'.
+escena = 'PU300';
+
+%Carga la escena dependiendo de un excel. 
+%Esta escena define las diferentes gaussianas necesarias para formar el 
+%layout del salón (sus normas, covarianzas y el factor al cual están 
+%escalados).
 [mius, covs, alphas] = cargar_escena(['escena_' escena '.xlsx']);
 
-%Para W204
-%cuad = {[1,0;0,1], [-32;-12], 0};
-
 pTam = struct('W204',[-2 16 -2 8],'PU300',[-1 6 -1 8]);
-pCuad = struct('W204',[1, 0.02, -32,-12],'PU300',[1, 0.5/4, 1,-1.35]);
+pCuad = struct('W204',[0.5, 0.02, -32,-12],'PU300',[0.1, 0.5/4, 1,-1.35]);
 
 param = pCuad.(escena);
-a0 = param(1);
 min = param(3:4);
 fact = param(2);
 
-%Para PU300
-%cuad = {[1,0;0,1], [1;-1.35], 50};
-cuad = {[1,0;0,a0], [min(1);min(2)], 50};
+cuad = {[1,0;0,1], [min(1);min(2)], 50};
 
-paso = 0.05; %Es el factor que multiplica al gradiente de los agentes en cada iteracion.
+%Es el factor que multiplica al gradiente de los agentes en cada iteracion.
+paso = 0.05; 
 
 %Indica si los agentes van a tener radio (1) o no (0).
 vol = 1;
@@ -35,14 +35,9 @@ minimoAgentes = 0;
 
 %Es un umbral utilizado para definir cuando se elimina un agente de la
 %simulacion.
-umbralNorma = 0.1;
+umbralNorma = param(1);
 
 syms x y;
-%Para W204
-%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.01);
-
-%Para PU300
-%f = @(x,y) gauss_m_cuad([x;y], mius, covs, alphas, cuad,0.5/4);
 
 %Gauss_m_cuad es la función que realiza la sumatoria de las diferentes
 %gauseanas y la cuadrática para definir el layout como esta gran 
@@ -55,7 +50,7 @@ g=-gradient(f, [x,y]);
 arf=@(x,y) J_agg(x,y,vol,escena);
 h=-gradient(arf,[x,y]);
 
-%Se cargan las posiciones iniciales de los angentes
+%Se cargan las posiciones iniciales de los agentes
 poss = cargar_pos(['posiciones_' escena '.xlsx']);
 equis = poss;
 xs = {};
@@ -65,11 +60,16 @@ zi = {};
 
 %Es el número de agentes con el que se inicia la simulación.
 numAgentesInicio = numAgentes;
+
+%Es una variable usada para definir cada cuantas iteraciones se grafica el
+%estado actual de la simulacion.
 frecuencia = numAgentesInicio;
 
 %Es una variable utilizada para indicar los agentes restantes y su
 %posición.
 j0=1:1:numAgentesInicio;
+
+disp(['Simulando la escena ' escena ' ...']);
 
 for i = 1:numAgentes
     p = poss{i};
@@ -87,7 +87,6 @@ y0=5;
 %Aquí comienza la simulación, en cada iteración cada agente se mueve una
 %distancia definida por su paso hasta llegar al final
 while i<1000 && numAgentes > minimoAgentes
-    %[m,numAgentes] = size(poss);
     ji=1;
     while ji<numAgentes+1
         j = j0(ji);
@@ -119,7 +118,8 @@ while i<1000 && numAgentes > minimoAgentes
         else
             dist
             j0(ji) = [];
-            numAgentes = numAgentes-1
+            numAgentes = numAgentes-1;
+            disp(['El número de agentes restantes es: ' numAgentes]);
         end
     end
     if mod(i,frecuencia) == 0
@@ -136,6 +136,9 @@ tiempo = toc
 i-1
 
 %% Grafica Escena
+% Quitarle el comentario a estas lineas si se desea graficar unicamente la
+% escena.
+
 % figure; hold on;  
 % 
 % escena = 'PU300';
@@ -174,25 +177,23 @@ i-1
 % title(['Scenario for classroom ' escena]);
 
 %% Guardar Figuras y Workspace
-ubicacion = ['./Resultados/jdm_simu_2' num2str(numAgentesInicio) '_' num2str(vol) '_' escena];
+%Es la ubicacion en donde se van a guardar las simulaciones.
+ubicacion = ['./Resultados/lf_simu_' num2str(numAgentesInicio) '_' num2str(vol) '_' escena];
 mkdir(ubicacion);
 
-FolderName = ubicacion;   % Your destination folder
+FolderName = ubicacion;
+
+%En las siguientes lineas se guardan todas las figuras de la simulacion
+%junto con el workspace. 
 FigList = findobj(allchild(0), 'flat', 'Type', 'figure');
 
 numFigs = length(FigList);
 
-for iFig = 1:numFigs-1
+for iFig = 1:numFigs
   FigHandle = FigList(iFig);
-  FigName   = ['I_' num2str((iFig-1)*26)]
+  FigName   = ['F' num2str(iFig)];
   set(0, 'CurrentFigure', FigHandle);
   savefig(fullfile(FolderName, [FigName '.fig']));
 end
-
-iFig = numFigs;
-FigHandle = FigList(iFig);
-FigName   = ['I_' num2str(i-1)];
-set(0, 'CurrentFigure', FigHandle);
-savefig(fullfile(FolderName, [FigName '.fig']));
   
 save([ubicacion '/Workspace']);

@@ -1,16 +1,10 @@
 function [] = pintar(f,xs,zs, equis, zi,numAgentesInicio,lim)
-%% Graficas
+%Esta funcion se encarga de graficar la posicion actual y la trayectoria
+%de los agentes.
 figure;
 hold on
 
-%Para W204
-%s = ezsurf(f,[-2 13 -2 8]);
-
-%Para PU300
 s = ezsurf(f,lim);
-
-%s = fsurf(f,[-1 6 -1 8]);
-%s.EdgeColor = 'none';
 
 colores = hot(numAgentesInicio);
 

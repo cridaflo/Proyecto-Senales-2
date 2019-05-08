@@ -1,6 +1,8 @@
 function [medias, covs, alphas] = cargar_escena(escena)
 
-num = xlsread(escena);%('escena_W204.xlsx');
+%Esta funcion se encarga de cargar los parámetros de las Gaussianas del
+%archivo de excel indicado por la escena.
+num = xlsread(escena);
 
 [m,n] = size(num);
 medias = cell(1,m);
