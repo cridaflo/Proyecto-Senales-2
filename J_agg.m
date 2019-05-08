@@ -1,10 +1,17 @@
-function [rta] = J_agg(x,y,vol)
+function [rta] = J_agg(x,y,vol,escena)
 
-a=1.1;
-b=-0.1;
+a=0.5;
+b=0.1;
 c=1.5;
-e = 0.1;
-eta = 0.43;
+e = 0.05;
+eta = 0.43/2;
+
+if strcmp(escena,'W204')
+   disp('Entre');
+   a = 1.1;
+   e = 0.003;
+end
+
 rta =a/2*distance(x,y)^2;
 if vol == 0
     %e = 20;

@@ -1,4 +1,4 @@
-function [] = pintar(f,xs,zs, equis, zi,numAgentesInicio)
+function [] = pintar(f,xs,zs, equis, zi,numAgentesInicio,lim)
 %% Graficas
 figure;
 hold on
@@ -7,7 +7,7 @@ hold on
 %s = ezsurf(f,[-2 13 -2 8]);
 
 %Para PU300
-s = ezsurf(f,[-1 6 -1 8]);
+s = ezsurf(f,lim);
 
 %s = fsurf(f,[-1 6 -1 8]);
 %s.EdgeColor = 'none';
